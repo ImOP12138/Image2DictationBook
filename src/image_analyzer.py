@@ -42,7 +42,7 @@ def analyze_image(image_path):
                         {
                             "type": "image_url",
                             "image_url": {
-                                # 使用你测试成功的URL格式
+                                # 修正：添加完整的 data: 前缀
                                 "url": f"data:image/jpeg;base64,{base64_image}"
                             },
                         },
@@ -74,10 +74,20 @@ def analyze_image(image_path):
 
 
 def save_result_to_file(result, filename="word.txt"):
-    """将结果保存到文件"""
+    """将结果保存到文件，每个单词或短语占一行"""
     try:
+        # 将逗号分隔的结果转换为列表
+        if result:
+            # 按逗号分割，并去除每个项目的首尾空格
+            items = [item.strip() for item in result.split(',') if item.strip()]
+        else:
+            items = []
+
+        # 保存到文件，每个项目占一行
         with open(filename, 'w', encoding='utf-8') as f:
-            f.write(result)
+            for item in items:
+                f.write(item + '\n')
+
         return True
     except Exception as e:
         print(f"保存文件失败：{str(e)}")
